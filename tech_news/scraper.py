@@ -1,8 +1,30 @@
-# Requisito 1
+import requests
+from fake_useragent import UserAgent
+from time import sleep
+
+RATE_LIMIT_DELAY = 1  # Delay de 1 segundo para respeitar o rate limit
+
+
 def fetch(url):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
-# first commit
+    try:
+        ua = UserAgent()
+        headers = {"user-agent": ua.random}
+
+        page = requests.get(url, headers=headers, timeout=3)
+        page.raise_for_status()
+
+        return page.text
+    except requests.exceptions.HTTPError as e:
+        if e.response.status_code == 404:
+            return None  # Retorna None para erros 404
+        else:
+            print(f"Erro na requisição: {e}")
+            return None
+    except requests.exceptions.RequestException as e:
+        print(f"Erro na requisição: {e}")
+        return None
+    finally:
+        sleep(RATE_LIMIT_DELAY)
 
 
 # Requisito 2
