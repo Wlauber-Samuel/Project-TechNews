@@ -1,6 +1,5 @@
 # Requisito 7
-import datetime
-
+from datetime import datetime
 from tech_news.database import search_news
 
 
@@ -13,7 +12,11 @@ def search_by_title(title):
 def search_by_date(date):
     try:
         date_format = datetime.strptime(date, "%Y-%m-%d")
-        new_format = date_format.strftime("%d/%m/%Y")
+        new_format = (
+            f"{date_format.day:02d}/"
+            f"{date_format.month:02d}/"
+            f"{date_format.year}"
+        )
     except ValueError:
         raise ValueError("Data inválida")
 
