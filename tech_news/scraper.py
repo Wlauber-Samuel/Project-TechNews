@@ -1,30 +1,25 @@
-import requests
-from fake_useragent import UserAgent
 from time import sleep
+import requests
 
-RATE_LIMIT_DELAY = 1  # Delay de 1 segundo para respeitar o rate limit
 
-
+# Requisito 1
 def fetch(url):
+    headers = {"user-agent": "Fake user-agent"}
+
     try:
-        ua = UserAgent()
-        headers = {"user-agent": ua.random}
+        sleep(1)
+        response = requests.get(url, headers=headers, timeout=3)
+        print(f"Status Code: {response.status_code}")
+        print(f"Headers: {response.headers}")
+        print(f"Content Type: {response.headers['content-type']}")
 
-        page = requests.get(url, headers=headers, timeout=3)
-        page.raise_for_status()
-
-        return page.text
-    except requests.exceptions.HTTPError as e:
-        if e.response.status_code == 404:
-            return None  # Retorna None para erros 404
-        else:
-            print(f"Erro na requisição: {e}")
+        if response.status_code != requests.codes.ok:
             return None
-    except requests.exceptions.RequestException as e:
-        print(f"Erro na requisição: {e}")
+        return response.text
+
+    except requests.Timeout:
+        print("Timeout durante a requisição.")
         return None
-    finally:
-        sleep(RATE_LIMIT_DELAY)
 
 
 # Requisito 2
