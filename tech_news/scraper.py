@@ -1,4 +1,5 @@
 from time import sleep
+from bs4 import BeautifulSoup
 import requests
 
 
@@ -24,8 +25,15 @@ def fetch(url):
 
 # Requisito 2
 def scrape_updates(html_content):
-    """Seu código deve vir aqui"""
-    raise NotImplementedError
+    soup = BeautifulSoup(html_content, "html.parser")
+    soup.prettify()
+    array = []
+    for item in soup.find_all("a", {"class": "cs-overlay-link"}):
+        array.append(item['href'])
+    if len(array) > 0:
+        return array
+    else:
+        return []
 
 
 # Requisito 3
